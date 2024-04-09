@@ -101,7 +101,15 @@ for key,val in rawSurfaces.items():
             nodeId = nodeId+1
             mid04 = intermNodes[val[1][3][0] + val[1][0][0]]
         
-        eleNodes = [val[1][0][0], mid01[0], val[1][1][0], mid02[0], val[1][2][0], mid03[0], val[1][3][0], mid04[0]]
+        # the centre of the edges should be enought
+        centralX = (cornerNodes[val[1][0][0]][0] + cornerNodes[val[1][1][0]][0] + cornerNodes[val[1][2][0]][0] + cornerNodes[val[1][3][0]][0]) / 4.0
+        centralY = (cornerNodes[val[1][0][0]][1] + cornerNodes[val[1][1][0]][1] + cornerNodes[val[1][2][0]][1] + cornerNodes[val[1][3][0]][1]) / 4.0
+        centralZ = (cornerNodes[val[1][0][0]][2] + cornerNodes[val[1][1][0]][2] + cornerNodes[val[1][2][0]][2] + cornerNodes[val[1][3][0]][2]) / 4.0
+        intermNodes[val[1][3][0] + val[1][0][0] + val[0]] = (hex(nodeId)[2:6].upper(), centralX, centralY, centralZ)
+        nodeId = nodeId+1
+        central = intermNodes[val[1][3][0] + val[1][0][0] + val[0]]
+        
+        eleNodes = [val[1][0][0], mid01[0], val[1][1][0], mid02[0], val[1][2][0], mid03[0], val[1][3][0], mid04[0], central[0]]
         shells[val[0]] = (eleNodes, val[2])
 
 # Builds the SACS model
@@ -124,8 +132,7 @@ for key,val in shells.items():
     shellJoints = list()
     for e in val[0]:
         shellJoints.append(sacsJoints[e])
-    if val[1] == 5: # Tri
-        sacsModel.AddShell(id = key, joints = shellJoints,Group = shellDefaultGroup)
+    sacsModel.AddShell(id = key, joints = shellJoints,Group = shellDefaultGroup)
         
 sacsModelFileName = asksaveasfilename(title='Select the target SACS model filename.', filetypes=[("All files","*.*")], initialfile = 'sacinp.meshmodel') # show an "Open" dialog box and return the path to the selected file
 sacsModel.SaveAs(sacsModelFileName)

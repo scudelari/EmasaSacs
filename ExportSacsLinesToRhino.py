@@ -9,7 +9,6 @@ import SACS.Model
 # For file dialogs
 from tkinter import Tk     # from tkinter import Tk for Python 3.x
 from tkinter.filedialog import askopenfilename
-from tkinter.filedialog import asksaveasfilename
 Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
 
 # Select the input SACS model
@@ -23,7 +22,7 @@ if sacsModel.ModelUnits == 0:
 else:
     rd.ModelUnitSystem = Rhino.UnitSystem.Meters
 
-5
+
 membersQuery = sacsModel.AllMembers()
 for m in membersQuery:
     j0 = m.Joints[0]
