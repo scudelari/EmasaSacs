@@ -16,11 +16,10 @@ from tkinter.filedialog import askopenfilename
 from tkinter.simpledialog import askstring
 Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
 
-# IMPORTANT - The start naming of the broken elements
-elementId = 0xA000
-
 # Select the input SACS model
 sacsFileName = askopenfilename(title='Select the SACS model with the frames', filetypes=[("SACS files","sacinp.*")]) # show an "Open" dialog box and return the path to the selected file
+if (sacsFileName == ''):
+    sys.exit(0)
 sacsModel = SACS.Model(sacsFileName)
 
 # Enter the member name - empty will mean all members in model
