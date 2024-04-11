@@ -1,0 +1,73 @@
+import SACS
+import SACS.Model
+import sys
+import os 
+import csv
+import re
+
+# For file dialogs
+from tkinter import Tk     # from tkinter import Tk for Python 3.x
+from tkinter.filedialog import askopenfilenames
+from tkinter.filedialog import asksaveasfilename
+from tkinter.simpledialog import askstring
+Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+
+# Select the input Dynpacs
+Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+dynpacOutputListingsFilenames = askopenfilenames(title='Select the Dynpac output files listings with the desired meshes', filetypes=[("Dynpac output listings","*dynlst.*")]) # show an "Open" dialog box and return the path to the selected file
+if dynpacOutputListingsFilenames == None or len(dynpacOutputListingsFilenames) == 0:
+    sys.exit(0)
+
+# Frequencies to read?
+readFrequencyCount = 9
+
+firstFileDir = os.path.dirname(dynpacOutputListingsFilenames[0])
+outputCsvPath = asksaveasfilename(title='Select the output CSV filename', filetypes=[("CSV","*.csv")], initialdir=firstFileDir, initialfile='frequencies.csv')
+
+freqLineRegex = re.compile(r"^\s*(?P<mode>\d*)\s*(?P<frequency>[\d\.]*)")
+
+with open(outputCsvPath, 'w', newline='') as outputCsv:
+    csvWriter = csv.writer(outputCsv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    
+    header = ['Filename']
+    for i in range(readFrequencyCount):
+        header.append(f"Mode {i+1}")
+    csvWriter.writerow(header)
+    
+    for fn in dynpacOutputListingsFilenames:       
+        # Finds the line
+        file = open(fn, 'r')
+        foundFrequencies = False
+        while True:
+            line = file.readline()
+            if (line.startswith('                              SACS IV-FREQUENCIES AND GENERALIZED MASS')):
+                foundFrequencies = True
+                break
+            
+            if not line: # End of file
+                break
+        
+        if (foundFrequencies):
+            # Skips 6 lines
+            file.readline()
+            file.readline()
+            file.readline()
+            file.readline()
+            file.readline()
+            file.readline()
+            
+            freqs = [fn]
+            for i in range(readFrequencyCount):
+                modeLine = file.readline()
+                match = freqLineRegex.search(modeLine)
+                if match:
+                    mode = match.group("mode")
+                    frequency = match.group("frequency")
+                    freqs.append(frequency)
+                else:
+                    raise ValueError(f'Could not find frequency {i+1} in file {fn}')
+                file.readline() # Skips another line
+            
+            # Writes the frequencies of this file
+            csvWriter.writerow(freqs)
+            
