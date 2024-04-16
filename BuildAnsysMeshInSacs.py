@@ -1,3 +1,11 @@
+##################
+# Ansys MESH to SACS model of shells
+#
+# Creates a separate SACS model of Shells from a JSON that
+# was created by the Ansys Export plugin
+#
+##################
+
 import SACS
 import SACS.Model
 import json

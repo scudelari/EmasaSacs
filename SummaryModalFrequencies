@@ -1,3 +1,10 @@
+##################
+# Given a list of Dynpac output LISTINGs (the txt), this script 
+# will automatically collect the frequencies of the modes and
+# eexport to a table
+#
+##################
+
 import SACS
 import SACS.Model
 import sys

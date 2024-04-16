@@ -1,3 +1,8 @@
+##################
+# Exports all defined members (frames) to a Rhino 3dm model.
+# Requires Rhino to be installed in the machine.
+##################
+
 import rhinoinside
 rhinoinside.load()
 import Rhino

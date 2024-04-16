@@ -1,4 +1,8 @@
-### DIVIDES MEMBERS BY JOINTS THAT ARE LAYING ON THEM
+##################
+# In an existing SACS model, this will split the members by joints laying directly on them
+# Filtering of which member is possible
+##################
+
 import sys
 import rhinoinside
 rhinoinside.load()

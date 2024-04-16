@@ -1,3 +1,10 @@
+##################
+# Adds joint loads to an existing SACS model
+# The loads are defined in a CSV table with customizable column names
+# The target joint can be selected by name.
+# It can also automatically add rotations to the loads around the Z axis
+##################
+
 import SACS
 import SACS.Model
 import sys
