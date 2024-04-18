@@ -25,8 +25,8 @@ if (csvLoadFilename == ''):
     sys.exit(0)
 
 # Setup the name of the joint where the loads will be added
-targetJointName = "INTR"
-csvColNames = {"Fx": "Fx", "Fy": None, "Fz": "Fz", "Mx": None, "My": "My", "Mz": "Mz"} 
+targetJointName = "TTOP"
+csvColNames = {"Fx": "Fx [kN]", "Fy": None, "Fz": "Fz [kN]", "Mx": None, "My": "My [kN*m]", "Mz": "Mz [kN*m]"} 
 anglesRaw = [0, 45, 90, 135, 180, 225, 270, 315]
 rotMatrices = dict()
 for a in anglesRaw:
@@ -41,7 +41,7 @@ lcCounter = 1
 
 # Parses the csv into a load dictionary
 with open(csvLoadFilename, 'r') as loadCsv:
-    csvReader = csv.DictReader(loadCsv)
+    csvReader = csv.DictReader(loadCsv, delimiter='\t')
     for row in csvReader:
         rowDict = dict()
         for key,val in row.items():
@@ -104,11 +104,11 @@ for lcName,jointLoad in lcs.items():
         if (abs(fvecrot[2]) > 1E-6):
             jointLoadDict["FZ"] = fvecrot[2]
             
-        if (abs(fvecrot[0]) > 1E-6):
+        if (abs(mvecrot[0]) > 1E-6):
             jointLoadDict["MX"] = mvecrot[0]
-        if (abs(fvecrot[1]) > 1E-6):
+        if (abs(mvecrot[1]) > 1E-6):
             jointLoadDict["MY"] = mvecrot[1]
-        if (abs(fvecrot[2]) > 1E-6):
+        if (abs(mvecrot[2]) > 1E-6):
             jointLoadDict["MZ"] = mvecrot[2]
         
         # Adds the loads
